@@ -402,7 +402,27 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 {
    memset(info, 0, sizeof(*info));
    info->timing.fps            = (cartridge_region == REGION_NTSC) ? 60 : 50;
+#if !defined(SF2000)
    info->timing.sample_rate    = (prosystem_frequency * prosystem_scanlines) << 1; /* 2 samples per scanline */
+#else
+   log_cb(RETRO_LOG_DEBUG, "[retro_get_system_av_info] sameple_rate = %d\n",((prosystem_frequency * prosystem_scanlines) << 1));
+   log_cb(RETRO_LOG_DEBUG, "[DIRTY HACK] forcing sameple_rate to 11025.\n");
+   
+   /* NOTE: The sample rate is assumed to be 31440 by default.
+            Relevant code is in:
+            
+			prosystem-libretro\core\Pokey.c, line 73
+			
+			    static uint32_t pokey_sampleRate = 31440;
+			
+			prosystem-libretro\bupboop\coretone\coretone.h
+			
+			    #define CORETONE_RENDER_RATE		48000
+				
+      SF2000 can only handle 11025, 22050, and 44100.
+   */
+   info->timing.sample_rate    = 11025;
+#endif
    info->geometry.base_width   = videoWidth;
    info->geometry.base_height  = (cartridge_region == REGION_NTSC) ? 223 : 272;
    info->geometry.max_width    = 320;
@@ -585,7 +605,14 @@ bool retro_load_game(const struct retro_game_info *info)
       sprintf(biospath, "%s%c%s", system_directory_c, slash, "7800 BIOS (U).rom");
    
    if (bios_Load(biospath))
+#if !defined(SF2000)
       bios_enabled = true;
+#else
+   {
+      bios_enabled = true;
+	  log_cb(RETRO_LOG_INFO, "[ProSystem]: using bios at %s\n", biospath);
+   }
+#endif
 
    prosystem_Reset();
 
