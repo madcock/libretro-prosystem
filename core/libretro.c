@@ -405,23 +405,9 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 #if !defined(SF2000)
    info->timing.sample_rate    = (prosystem_frequency * prosystem_scanlines) << 1; /* 2 samples per scanline */
 #else
-   log_cb(RETRO_LOG_DEBUG, "[retro_get_system_av_info] sameple_rate = %d\n",((prosystem_frequency * prosystem_scanlines) << 1));
-   log_cb(RETRO_LOG_DEBUG, "[DIRTY HACK] forcing sameple_rate to 11025.\n");
-   
-   /* NOTE: The sample rate is assumed to be 31440 by default.
-            Relevant code is in:
-            
-			prosystem-libretro\core\Pokey.c, line 73
-			
-			    static uint32_t pokey_sampleRate = 31440;
-			
-			prosystem-libretro\bupboop\coretone\coretone.h
-			
-			    #define CORETONE_RENDER_RATE		48000
-				
-      SF2000 can only handle 11025, 22050, and 44100.
-   */
-   info->timing.sample_rate    = 11025;
+   log_cb(RETRO_LOG_DEBUG, "sample_rate = %d\n",((prosystem_frequency * prosystem_scanlines) << 1));
+   log_cb(RETRO_LOG_DEBUG, "forcing sample_rate to 32000\n");
+   info->timing.sample_rate    = 32000;
 #endif
    info->geometry.base_width   = videoWidth;
    info->geometry.base_height  = (cartridge_region == REGION_NTSC) ? 223 : 272;

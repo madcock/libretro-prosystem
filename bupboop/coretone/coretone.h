@@ -59,11 +59,19 @@
  * by CORETONE_DECODE_RATE.
  */
 #ifndef CORETONE_RENDER_RATE
+#if !defined(SF2000)
 	#define CORETONE_RENDER_RATE		48000
+#else
+	#define CORETONE_RENDER_RATE		32000	//11025?
+#endif
 #endif
 
 #ifndef CORETONE_DECODE_RATE
+#if !defined(SF2000)
 	#define CORETONE_DECODE_RATE		240
+#else
+	#define CORETONE_DECODE_RATE		200		//225?
+#endif
 #endif
 
 

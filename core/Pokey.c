@@ -70,7 +70,11 @@ uint8_t pokey_buffer[POKEY_BUFFER_SIZE] = {0};
 uint32_t pokey_size = 524;
 
 static uint32_t pokey_frequency = 1787520;
+#if !defined(SF2000)
 static uint32_t pokey_sampleRate = 31440;
+#else
+static uint32_t pokey_sampleRate = 32000;
+#endif
 uint32_t pokey_soundCntr = 0;
 uint8_t pokey_audf[4];
 uint8_t pokey_audc[4];
